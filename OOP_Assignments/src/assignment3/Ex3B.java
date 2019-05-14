@@ -52,64 +52,69 @@ public class Ex3B {
 
 	public static void countLinesThreads(int numFiles) {
 		String[] fileNames = createFiles(numFiles);
-
+		
 		LineCounter[] threadsCounter = new LineCounter[numFiles];
 		for (int i = 0; i < threadsCounter.length; i++) {
 			threadsCounter[i] = new LineCounter(fileNames[i]);
 		}
+		long time2 = System.currentTimeMillis();
+
 		for (int i = 0; i < threadsCounter.length; i++) {
 			threadsCounter[i].start();
 		}
-		long time = 0;
 		int sum = 0;
 		for (int i = 0; i < threadsCounter.length; i++) {
 			while (threadsCounter[i].isAlive());
-			time += threadsCounter[i].getTime();
 			sum += threadsCounter[i].getCounter();
 		}
-		System.out.println("Lines: " + sum+"\t Time: "+time);
+
+		time2 = System.currentTimeMillis();
+		System.out.println("Lines: " + sum+"\t Time: "+time2);
 		deleteFiles(fileNames);
 	}
 
 	private static void countLinesOneProcess(int numFiles) {
 		String[] fileNames = createFiles(numFiles);
-		long time = 0;
 		int sum = 0;
+		long time2 = System.currentTimeMillis();
+
 		for (int i = 0; i < fileNames.length; i++) {
 			LineCounter oneThread = new LineCounter(fileNames[i]);
 			/* Notice the use of run (Non-parallel computing) */
 			oneThread.run();
-			time += oneThread.getTime();
 			sum += oneThread.getCounter();
 		}
-		System.out.println("Lines: " + sum+"\t Time: "+time);
+	
+		time2 = System.currentTimeMillis() - time2;
+		System.out.println("Lines: " + sum+"\t Time: "+time2);
 		deleteFiles(fileNames);
 	}
 
 	private static void countLinesThreadPool(int numFiles) {
 		String[] fileNames = createFiles(numFiles);
 		ExecutorService executor = Executors.newFixedThreadPool(numFiles);
-		List<Future<IntULong>> placeholders = new ArrayList<Future<IntULong>>(numFiles);
+		List<Future<Integer>> placeholders = new ArrayList<Future<Integer>>(numFiles);
+		long time2 = System.currentTimeMillis();
+
 		for (int i = 0; i < fileNames.length; i++) {
-			Future<IntULong> placeholder = executor.submit(
-					(Callable<IntULong>) new LineCounter(fileNames[i]));
+			Future<Integer> placeholder = executor.submit(
+					(Callable<Integer>) new LineCounter(fileNames[i]));
 			placeholders.add(placeholder);
 		}
 		
 		int sum = 0;
-		long time = 0;
 		
 		for (int i = 0; i < fileNames.length; i++) {
 			try {
-				IntULong LinesAndTime = placeholders.get(i).get();
-				sum += LinesAndTime.getCounter();
-				time += LinesAndTime.getTime();
+				Integer Lines = placeholders.get(i).get();
+				sum += Lines;
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		System.out.println("Lines: " + sum+"\t Time: "+time);
+	
+		time2 = System.currentTimeMillis() - time2;
+		System.out.println("Lines: " + sum+"\t Time: "+time2);
 		executor.shutdown();
 		deleteFiles(fileNames);
 	}
@@ -119,6 +124,38 @@ public class Ex3B {
 		countLinesThreads(num);
 		countLinesOneProcess(num);
 		countLinesThreadPool(num);
+		
+		int numOfProcessor = Runtime.getRuntime().availableProcessors();
+		countLinesMulitpleCores(num,numOfProcessor);
+	}
+
+	private static void countLinesMulitpleCores(int numFiles, int numOfProcessor) {
+		String[] fileNames = createFiles(numFiles);
+		ExecutorService executor = Executors.newFixedThreadPool(numOfProcessor);
+		List<Future<Integer>> placeholders = new ArrayList<Future<Integer>>(numFiles);
+		long time2 = System.currentTimeMillis();
+
+		for (int i = 0; i < fileNames.length; i++) {
+			Future<Integer> placeholder = executor.submit(
+					(Callable<Integer>) new LineCounter(fileNames[i]));
+			placeholders.add(placeholder);
+		}
+		
+		int sum = 0;
+		
+		for (int i = 0; i < fileNames.length; i++) {
+			try {
+				Integer Lines = placeholders.get(i).get();
+				sum += Lines;
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
+
+		time2 = System.currentTimeMillis() - time2;
+		System.out.println("Lines: " + sum+"\t Time: "+time2);
+		executor.shutdown();
+		deleteFiles(fileNames);
 	}
 
 }
