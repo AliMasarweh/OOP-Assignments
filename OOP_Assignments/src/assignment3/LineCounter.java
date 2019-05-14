@@ -18,7 +18,7 @@ public class LineCounter extends Thread {
 	}
 
 	public void run() {
-		long startingTime = System.nanoTime();
+		long startingTime = System.currentTimeMillis();
 		File file = new File(fileName); 
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file)); 
@@ -28,7 +28,7 @@ public class LineCounter extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		time = (System.nanoTime()-startingTime);
+		time = (System.currentTimeMillis()-startingTime);
 		//System.out.println("Lines: "+ counter +" ,Time: "+ time);
 	}
 

@@ -59,24 +59,28 @@ public class Ex3B {
 			threadsCounter[i].start();
 		}
 		long time = 0;
+		int sum = 0;
 		for (int i = 0; i < threadsCounter.length; i++) {
-			while (threadsCounter[i].isAlive())
-				;
+			while (threadsCounter[i].isAlive());
 			time += threadsCounter[i].getTime();
+			sum += threadsCounter[i].getCounter();
 		}
-		System.out.println(time);
+		System.out.println("Lines: " + sum+"\t Time: "+time);
 		deleteFiles(fileNames);
 	}
 
 	private static void countLinesOneProcess(int numFiles) {
 		String[] fileNames = createFiles(numFiles);
 		long time = 0;
+		int sum = 0;
 		for (int i = 0; i < fileNames.length; i++) {
 			LineCounter oneThread = new LineCounter(fileNames[i]);
+			/* Notice the use of run (Non-parallel computing) */
 			oneThread.run();
 			time += oneThread.getTime();
+			sum += oneThread.getCounter();
 		}
-		System.out.println(time);
+		System.out.println("Lines: " + sum+"\t Time: "+time);
 		deleteFiles(fileNames);
 	}
 
@@ -92,7 +96,7 @@ public class Ex3B {
 			exe[indx[0]] = new Runnable() {
 
 				@Override
-				public void run() {
+				public synchronized void run() {
 
 					File file = new File(fileNames[indx[0]]); 
 					try {
@@ -119,7 +123,7 @@ public class Ex3B {
 
 	public static void main(String[] args) {
 		int num = 1000;
-		//countLinesThreads(num);
+		countLinesThreads(num);
 		countLinesOneProcess(num);
 		//countLinesThreadPool(num);
 	}
