@@ -57,7 +57,7 @@ public class Ex3B {
 		for (int i = 0; i < threadsCounter.length; i++) {
 			threadsCounter[i] = new LineCounter(fileNames[i]);
 		}
-		long time2 = System.currentTimeMillis();
+		long time = System.currentTimeMillis();
 
 		for (int i = 0; i < threadsCounter.length; i++) {
 			threadsCounter[i].start();
@@ -68,15 +68,15 @@ public class Ex3B {
 			sum += threadsCounter[i].getCounter();
 		}
 
-		time2 = System.currentTimeMillis();
-		System.out.println("Lines: " + sum+"\t Time: "+time2);
+		time = System.currentTimeMillis();
+		System.out.println("Lines: " + sum+"\t Time: "+time);
 		deleteFiles(fileNames);
 	}
 
 	private static void countLinesOneProcess(int numFiles) {
 		String[] fileNames = createFiles(numFiles);
 		int sum = 0;
-		long time2 = System.currentTimeMillis();
+		long time = System.currentTimeMillis();
 
 		for (int i = 0; i < fileNames.length; i++) {
 			LineCounter oneThread = new LineCounter(fileNames[i]);
@@ -85,8 +85,8 @@ public class Ex3B {
 			sum += oneThread.getCounter();
 		}
 	
-		time2 = System.currentTimeMillis() - time2;
-		System.out.println("Lines: " + sum+"\t Time: "+time2);
+		time = System.currentTimeMillis() - time;
+		System.out.println("Lines: " + sum+"\t Time: "+time);
 		deleteFiles(fileNames);
 	}
 
@@ -94,7 +94,7 @@ public class Ex3B {
 		String[] fileNames = createFiles(numFiles);
 		ExecutorService executor = Executors.newFixedThreadPool(numFiles);
 		List<Future<Integer>> placeholders = new ArrayList<Future<Integer>>(numFiles);
-		long time2 = System.currentTimeMillis();
+		long time = System.currentTimeMillis();
 
 		for (int i = 0; i < fileNames.length; i++) {
 			Future<Integer> placeholder = executor.submit(
@@ -113,8 +113,8 @@ public class Ex3B {
 			}
 		}
 	
-		time2 = System.currentTimeMillis() - time2;
-		System.out.println("Lines: " + sum+"\t Time: "+time2);
+		time = System.currentTimeMillis() - time;
+		System.out.println("Lines: " + sum+"\t Time: "+time);
 		executor.shutdown();
 		deleteFiles(fileNames);
 	}
@@ -133,7 +133,7 @@ public class Ex3B {
 		String[] fileNames = createFiles(numFiles);
 		ExecutorService executor = Executors.newFixedThreadPool(numOfProcessor);
 		List<Future<Integer>> placeholders = new ArrayList<Future<Integer>>(numFiles);
-		long time2 = System.currentTimeMillis();
+		long time = System.currentTimeMillis();
 
 		for (int i = 0; i < fileNames.length; i++) {
 			Future<Integer> placeholder = executor.submit(
@@ -152,8 +152,8 @@ public class Ex3B {
 			}
 		}
 
-		time2 = System.currentTimeMillis() - time2;
-		System.out.println("Lines: " + sum+"\t Time: "+time2);
+		time = System.currentTimeMillis() - time;
+		System.out.println("Lines: " + sum+"\t Time: "+time);
 		executor.shutdown();
 		deleteFiles(fileNames);
 	}
