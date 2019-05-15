@@ -6,7 +6,7 @@ public class Ex3A implements Runnable{
 	boolean finished = false;
 	long num = -1;
 
-	public boolean isPrime(long n, double d) {
+	public boolean isPrime(long n, double d) throws RuntimeException{
 		this.num = n;
 		Thread thread = new Thread(this);
 		long startingTime = System.currentTimeMillis();
@@ -14,7 +14,7 @@ public class Ex3A implements Runnable{
 		while(!finished) {
 			if(System.currentTimeMillis() - d*1000 > startingTime) {
 				thread.stop();
-				return false;
+				throw new RuntimeException("Internal function is stuck!");
 			}
 		}
 		return ans;
