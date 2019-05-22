@@ -12,7 +12,7 @@ public class Ex3A implements Runnable{
 		long startingTime = System.currentTimeMillis();
 		thread.start();
 		while(!finished) {
-			if(System.currentTimeMillis() - d*1000 > startingTime) {
+			if(System.currentTimeMillis() - d*5000 > startingTime) {
 				thread.stop();
 				throw new RuntimeException("Internal function is stuck!");
 			}
