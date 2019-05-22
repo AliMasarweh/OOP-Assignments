@@ -69,7 +69,7 @@ public class Ex3B {
 		}
 
 		time = System.currentTimeMillis();
-		System.out.println("Lines: " + sum+"\t Time: "+time);
+		System.out.println("Lines: " + sum+"\t Threads Time: "+time/1000 + " seconds");
 		deleteFiles(fileNames);
 	}
 
@@ -86,7 +86,7 @@ public class Ex3B {
 		}
 	
 		time = System.currentTimeMillis() - time;
-		System.out.println("Lines: " + sum+"\t Time: "+time);
+		System.out.println("Lines: " + sum+"\t One Process Time: "+time+ " milliseconds");
 		deleteFiles(fileNames);
 	}
 
@@ -114,7 +114,7 @@ public class Ex3B {
 		}
 	
 		time = System.currentTimeMillis() - time;
-		System.out.println("Lines: " + sum+"\t Time: "+time);
+		System.out.println("Lines: " + sum+"\t Thread Pool Time: "+time+ " milliseconds");
 		executor.shutdown();
 		deleteFiles(fileNames);
 	}
@@ -153,7 +153,7 @@ public class Ex3B {
 		}
 
 		time = System.currentTimeMillis() - time;
-		System.out.println("Lines: " + sum+"\t Time: "+time);
+		System.out.println("Lines: " + sum+"\t Multiple Corse Time: "+time+ " milliseconds");
 		executor.shutdown();
 		deleteFiles(fileNames);
 	}
