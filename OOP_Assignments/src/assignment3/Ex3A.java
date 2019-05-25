@@ -1,5 +1,15 @@
 package assignment3;
 
+/**
+ * Ex3A is a class to cover for Ex3_tester class's faultiness
+ * Utilizing the threads properties of semi-parallel computing
+ * to run an internal function while keeping track of it's running 
+ * time to determine whether it took an unreasonable without yielding an 
+ * answer or it still has more time according the prediction of the 
+ * function user to determine if the number is prime.
+ * @author Ali Masarweh
+ * 
+ */
 public class Ex3A implements Runnable{
 	
 	boolean ans = false;
@@ -13,9 +23,10 @@ public class Ex3A implements Runnable{
 	 * @param d the given time in seconds argument to break 
 	 * out of internal function, in this case we multiply this time argument 
 	 * by 5 to account for slower systems
-	 * @return
+	 * @return true if the given number is prime, otherwise, false
 	 * @throws RuntimeException in case of internal function failure
 	 */
+	@SuppressWarnings("deprecation")
 	public boolean isPrime(long n, double d) throws RuntimeException{
 		this.num = n;
 		Thread thread = new Thread(this);

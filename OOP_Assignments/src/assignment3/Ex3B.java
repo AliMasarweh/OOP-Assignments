@@ -13,6 +13,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+/**
+ * An example of how using too many threads might be 
+ * less efficient than linear computing, as well as,
+ * how threads pool can deal with such a problem of 
+ * too many threads to assign runtime for, also an example
+ * of ideal number of threads w/o hyper-threading CPUs
+ * @author Ali Masarweh
+ *
+ */
 public class Ex3B {
 	/**
 	 * Generates random lines of hello world in each file
