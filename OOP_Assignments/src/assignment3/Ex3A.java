@@ -6,6 +6,16 @@ public class Ex3A implements Runnable{
 	boolean finished = false;
 	long num = -1;
 
+	/**
+	 * Wrapper of the function Ex3_tester.isPrimes(long n) to deal with
+	 * it looping in some situations.
+	 * @param n the given number argument to be checked
+	 * @param d the given time in seconds argument to break 
+	 * out of internal function, in this case we multiply this time argument 
+	 * by 5 to account for slower systems
+	 * @return
+	 * @throws RuntimeException in case of internal function failure
+	 */
 	public boolean isPrime(long n, double d) throws RuntimeException{
 		this.num = n;
 		Thread thread = new Thread(this);

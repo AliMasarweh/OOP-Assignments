@@ -68,8 +68,8 @@ public class Ex3B {
 			sum += threadsCounter[i].getCounter();
 		}
 
-		time = System.currentTimeMillis();
-		System.out.println("Lines: " + sum+"\t Threads Time: "+time/1000 + " seconds");
+		time = System.currentTimeMillis() - time;
+		System.out.println("Lines: " + sum+"\t Threads Time: "+time + " milliseconds");
 		deleteFiles(fileNames);
 	}
 
@@ -127,6 +127,7 @@ public class Ex3B {
 		
 		int numOfProcessor = Runtime.getRuntime().availableProcessors();
 		countLinesMulitpleCores(num,numOfProcessor);
+		countLinesMulitpleCores(num,numOfProcessor*2);
 	}
 
 	private static void countLinesMulitpleCores(int numFiles, int numOfProcessor) {
@@ -153,7 +154,8 @@ public class Ex3B {
 		}
 
 		time = System.currentTimeMillis() - time;
-		System.out.println("Lines: " + sum+"\t Multiple Corse Time: "+time+ " milliseconds");
+		System.out.println("Lines: " + sum+"\t Multiple Cores Time: "+time+ " milliseconds"
+				+" Threads number: " + numOfProcessor);
 		executor.shutdown();
 		deleteFiles(fileNames);
 	}
