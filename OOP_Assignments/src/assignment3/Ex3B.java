@@ -14,6 +14,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class Ex3B {
+	/**
+	 * Generates random lines of hello world in each file
+	 * @param n number of files
+	 * @return an Array of the generated file names
+	 */
 	public static String[] createFiles(int n) {
 		/* **Preparing Name Format & Random Series ** */
 		String fileName = "File_%s.txt";
@@ -45,11 +50,20 @@ public class Ex3B {
 		return ans;
 	}
 
+	/**
+	 * Deletes the files by name from the given argument array of names
+	 * @param fileNames array of files names to be deleted
+	 */
 	public static void deleteFiles(String[] fileNames) {
 		for (String fileName : fileNames)
 			new File(fileName).delete();
 	}
 
+	/**
+	 * Counts the lines of each file in parallel using threads
+	 * with number of threads equal to the number of files
+	 * @param numFiles of to generate randomly and count lines
+	 */
 	public static void countLinesThreads(int numFiles) {
 		String[] fileNames = createFiles(numFiles);
 		
@@ -73,6 +87,10 @@ public class Ex3B {
 		deleteFiles(fileNames);
 	}
 
+	/**
+	 * Counts the lines using one thread (Linear computing)
+	 * @param numFiles of to generate randomly and count lines
+	 */
 	private static void countLinesOneProcess(int numFiles) {
 		String[] fileNames = createFiles(numFiles);
 		int sum = 0;
@@ -90,6 +108,11 @@ public class Ex3B {
 		deleteFiles(fileNames);
 	}
 
+	/**
+	 * Counts the lines of each file in parallel using threads pool
+	 * with number of threads equal to the number of files
+	 * @param numFiles of to generate randomly and count lines
+	 */
 	private static void countLinesThreadPool(int numFiles) {
 		String[] fileNames = createFiles(numFiles);
 		ExecutorService executor = Executors.newFixedThreadPool(numFiles);
@@ -130,6 +153,12 @@ public class Ex3B {
 		countLinesMulitpleCores(num,numOfProcessor*2);
 	}
 
+	/**
+	 * Counts the lines of each file in parallel using threads pool
+	 * with number of threads equal to the number of processors
+	 * @param numFiles of to generate randomly and count lines
+	 * @param numOfProcessor number of threads
+	 */
 	private static void countLinesMulitpleCores(int numFiles, int numOfProcessor) {
 		String[] fileNames = createFiles(numFiles);
 		ExecutorService executor = Executors.newFixedThreadPool(numOfProcessor);
