@@ -11,25 +11,25 @@ import java.util.Scanner;
 import javax.swing.JTextField;
 
 public class MaxSequenceSumGame {
-	
+
 	private List<Integer> gameSequence;
 	private int sum_player1, sum_player2, len;
 	private boolean isReset;
 	private Agent agent;
-	
-	public MaxSequenceSumGame(int game_len){
-		len = ((1+game_len)/2)*2;
+
+	public MaxSequenceSumGame(int game_len) {
+		len = ((1 + game_len) / 2) * 2;
 		generateRandomSequence(len);
 		sum_player1 = 0;
 		sum_player2 = 0;
 		isReset = true;
 		agent = AgentFactory.buildSophisticatedAgent();
 	}
-	
+
 	public void setAgentToSopisticated() {
 		agent = AgentFactory.buildSophisticatedAgent();
 	}
-	
+
 	public void setAgentToRandom() {
 		agent = AgentFactory.buildRandomAgent();
 	}
@@ -41,85 +41,95 @@ public class MaxSequenceSumGame {
 			gameSequence.add(rnd.nextInt(100));
 		}
 	}
-	
+
 	public void start(Reader reader) {
-		if(!isReset)
+		if (!isReset)
 			this.reset();
 		int turn = 1;
 		String line = null;
 		Scanner in = new Scanner(reader);
-		while(!gameSequence.isEmpty()) {
-			if(turn == 1) {
+		while (!gameSequence.isEmpty()) {
+			if (turn == 1) {
 				line = agent.play(gameSequence) + "";
-				if(line.equals("L"))
+				if (line.equals("L"))
 					sum_player2 += this.gameSequence.remove(0);
 				else
-					sum_player2 += gameSequence.remove(gameSequence.size()-1);
-			}
-			else {
+					sum_player2 += gameSequence.remove(gameSequence.size() - 1);
+			} else {
 				line = in.nextLine();
-				while(!line.equals("L") && !line.equals("R")) {
-						System.out.println("Wrong Input, please input");
-						line = in.nextLine();
+				while (!line.equals("L") && !line.equals("R")) {
+					System.out.println("Wrong Input, please input");
+					line = in.nextLine();
 				}
-				if(line.equals("L"))
+				if (line.equals("L"))
 					sum_player2 += this.gameSequence.remove(0);
 				else
-					sum_player2 += gameSequence.remove(gameSequence.size()-1);
+					sum_player2 += gameSequence.remove(gameSequence.size() - 1);
 			}
 			turn = 3 - turn;
 			System.out.println(gameSequence);
 		}
 		in.close();
-		if(sum_player1 > sum_player2)
+		if (sum_player1 > sum_player2)
 			System.out.println("Player 1 Won!");
-		else if(sum_player2 > sum_player1)
+		else if (sum_player2 > sum_player1)
 			System.out.println("Player 2 Won!");
 		else
 			System.out.println("Draw!");
 		isReset = false;
-			
+
 	}
-	
-	public void startGUI(Reader reader, JTextField sequence, JTextField output) {
-		if(!isReset)
+
+	public void startGUI(PipedInputThread pipeReader,JTextField sequence, JTextField output) {
+		if (!isReset)
 			this.reset();
 		int turn = 1;
-		String line = null;
-		Scanner in = new Scanner(reader);
-		while(!gameSequence.isEmpty()) {
-			if(turn == 1) {
-				line = agent.play(gameSequence) + "";
-				if(line.equals("L"))
-					sum_player2 += this.gameSequence.remove(0);
+		char input = PipedInputThread.NO_INPUT;
+		while (!gameSequence.isEmpty()) {
+			if (turn == 1) {
+				input = agent.play(gameSequence);
+				if (input == 'L')
+					sum_player1 += this.gameSequence.remove(0);
 				else
-					sum_player2 += gameSequence.remove(gameSequence.size()-1);
-			}
-			else {
-				line = in.nextLine();
-				while(!line.equals("L") && !line.equals("R")) {
-						System.out.println("Wrong Input, please input");
-						line = in.nextLine();
+					sum_player1 += gameSequence.remove(gameSequence.size() - 1);
+			} else {
+				input = PipedInputThread.NO_INPUT;
+				System.out.println(input);
+				while ((input = pipeReader.read()) == PipedInputThread.NO_INPUT) {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-				if(line.equals("L"))
+				System.out.println(input);
+				while (input != 'L' && input != 'R') {
+					while ((input = pipeReader.read()) != PipedInputThread.NO_INPUT)
+						;
+				}
+				if (input == 'L') {
 					sum_player2 += this.gameSequence.remove(0);
-				else
-					sum_player2 += gameSequence.remove(gameSequence.size()-1);
+					System.out.println("LEFT!");
+				}
+				else {
+					System.out.println("RIGHT!");
+					sum_player2 += gameSequence.remove(gameSequence.size() - 1);
+				}
 			}
 			turn = 3 - turn;
 			sequence.setText(gameSequence.toString());
-			output.setText("Sum of p1: " + sum_player1 +"\tSum of p2: " + sum_player2);
+			output.setText("Sum of p1: " + sum_player1 + "\tSum of p2: " + sum_player2);
 		}
-		in.close();
-		String tmp = "Sum of p1: " + sum_player1 +"\tSum of p2: " + sum_player2;
-		if(sum_player1 > sum_player2)
+		String tmp = "Sum of p1: " + sum_player1 + "\tSum of p2: " + sum_player2;
+		if (sum_player1 > sum_player2)
 			output.setText(tmp + "\tPlayer 1 Won!");
-		else if(sum_player2 > sum_player1)
+		else if (sum_player2 > sum_player1)
 			output.setText(tmp + "\tPlayer 2 Won!");
 		else
 			output.setText(tmp + "\tDraw!");
 		isReset = false;
-			
+
 	}
 
 	public void reset() {
@@ -128,11 +138,11 @@ public class MaxSequenceSumGame {
 		sum_player2 = 0;
 		isReset = true;
 	}
-	
+
 	public void printSequence() {
 		System.out.println(gameSequence);
 	}
-	
+
 	public static void main(String[] args) {
 		MaxSequenceSumGame game = new MaxSequenceSumGame(10);
 		game.printSequence();

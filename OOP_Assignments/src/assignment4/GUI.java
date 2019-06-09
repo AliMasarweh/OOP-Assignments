@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -11,7 +12,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUI {
 
@@ -21,11 +25,13 @@ public class GUI {
 	private JTextField output;
 	private MaxSequenceSumGame game;
 	protected Thread gameThread;
+	public final static PipedOutputStream pipedOut = new PipedOutputStream();
+	public final static PipedInputStream pipedIn = new PipedInputStream();
 	public static InputStream in = new InputStream() {
-		
+
 		@Override
 		public int read() throws IOException {
-			
+
 			return 0;
 		}
 	};
@@ -60,6 +66,22 @@ public class GUI {
 	private void initialize() {
 		game = new MaxSequenceSumGame(20);
 
+		PipedOutputThread outputPipe = new PipedOutputThread();
+		PipedInputThread inputPipe = new PipedInputThread();
+
+		Thread outputThread = new Thread(outputPipe);
+		outputThread.start();
+
+		Thread inputThread = new Thread(inputPipe);
+		inputThread.start();
+
+		try {
+			pipedOut.connect(pipedIn);
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,10 +99,10 @@ public class GUI {
 			public void mouseClicked(MouseEvent arg0) {
 				game.reset();
 				gameThread = new Thread(new Runnable() {
-					
+
 					@Override
 					public void run() {
-						game.startGUI(new BufferedReader(new InputStreamReader(System.in)),sequenceField, output);
+						game.startGUI(inputPipe, sequenceField, output);
 					}
 				});
 				gameThread.start();
@@ -93,23 +115,13 @@ public class GUI {
 		btnLeft.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				byte[] b = {'L'};
-				new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						try {
-							System.out.println("READING");
-							System.in.read(b, 0, 1);
-							System.out.println("FINISHED");
-							System.out.println(System.in.available());
-
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}).start();
+				try {
+					gameThread.sleep(2000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				outputPipe.output('L');
 			}
 		});
 		btnLeft.setBounds(86, 102, 99, 33);
@@ -119,12 +131,7 @@ public class GUI {
 		btnRight.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				byte[] b = {'R'};
-				try {
-					System.in.read(b);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+
 			}
 		});
 		btnRight.setBounds(253, 102, 99, 33);
@@ -148,5 +155,82 @@ public class GUI {
 		output.setBounds(12, 205, 408, 35);
 		frame.getContentPane().add(output);
 		output.setColumns(10);
+	}
+}
+
+class PipedOutputThread implements Runnable {
+
+	private char output;
+	private Object lock = new Object();
+
+	public PipedOutputThread() {
+		output = PipedInputThread.NO_INPUT;
+	}
+
+	/*
+	 * public char output() { return output; }
+	 */
+
+	public void output(char output) {
+		this.output = output;
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			synchronized (lock) {
+				try {
+					System.out.println("SCANNIG");
+					// To not output an invalid input
+					while (output == PipedInputThread.NO_INPUT)
+						;
+					GUI.pipedOut.write((output + "").getBytes());
+					System.out.println("WRITING " + output);
+					output = PipedInputThread.NO_INPUT;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
+}
+
+class PipedInputThread implements Runnable {
+
+	public final static char NO_INPUT = 'V';
+	private char currentInput;
+	private List<Character> readSoFar;
+	private Object lock = new Object();
+
+	public PipedInputThread() {
+		currentInput = NO_INPUT;
+		readSoFar = new ArrayList<>();
+	}
+
+	public char read() {
+		System.out.println("READING");
+		if (readSoFar.isEmpty())
+			return NO_INPUT;
+		return readSoFar.remove(0);
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			System.out.println("RUNNING");
+			try {
+				int i = 0;
+				while ((i = GUI.pipedIn.read()) != -1) {
+					synchronized (lock) {
+						currentInput = (char) i;
+						readSoFar.add(currentInput);
+						currentInput = NO_INPUT;
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
