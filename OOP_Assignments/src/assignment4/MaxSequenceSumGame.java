@@ -81,6 +81,47 @@ public class MaxSequenceSumGame {
 			
 	}
 
+	public void startGUI(Reader reader, JTextField sequence, JTextField output) {
+		if(!isReset)
+			this.reset();
+		int turn = 1;
+		String line = null;
+		Scanner in = new Scanner(reader);
+		while(!gameSequence.isEmpty()) {
+			if(turn == 1) {
+				line = agent.play(gameSequence) + "";
+				if(line.equals("L"))
+					sum_player2 += this.gameSequence.remove(0);
+				else
+					sum_player2 += gameSequence.remove(gameSequence.size()-1);
+			}
+			else {
+				line = in.nextLine();
+				while(!line.equals("L") && !line.equals("R")) {
+						System.out.println("Wrong Input, please input");
+						line = in.nextLine();
+				}
+				if(line.equals("L"))
+					sum_player2 += this.gameSequence.remove(0);
+				else
+					sum_player2 += gameSequence.remove(gameSequence.size()-1);
+			}
+			turn = 3 - turn;
+			sequence.setText(gameSequence.toString());
+			output.setText("Sum of p1: " + sum_player1 +"\tSum of p2: " + sum_player2);
+		}
+		in.close();
+		String tmp = "Sum of p1: " + sum_player1 +"\tSum of p2: " + sum_player2;
+		if(sum_player1 > sum_player2)
+			output.setText(tmp + "\tPlayer 1 Won!");
+		else if(sum_player2 > sum_player1)
+			output.setText(tmp + "\tPlayer 2 Won!");
+		else
+			output.setText(tmp + "\tDraw!");
+		isReset = false;
+			
+	}
+
 	public void reset() {
 		generateRandomSequence(len);
 		sum_player1 = 0;
