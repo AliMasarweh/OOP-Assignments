@@ -94,26 +94,71 @@ public class MaxSequenceSumGame {
 					sum_player1 += gameSequence.remove(gameSequence.size() - 1);
 			} else {
 				input = PipedInputThread.NO_INPUT;
-				System.out.println(input);
 				while ((input = pipeReader.read()) == PipedInputThread.NO_INPUT) {
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(300);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-				System.out.println(input);
 				while (input != 'L' && input != 'R') {
 					while ((input = pipeReader.read()) != PipedInputThread.NO_INPUT)
 						;
 				}
 				if (input == 'L') {
 					sum_player2 += this.gameSequence.remove(0);
-					System.out.println("LEFT!");
 				}
 				else {
-					System.out.println("RIGHT!");
+					sum_player2 += gameSequence.remove(gameSequence.size() - 1);
+				}
+			}
+			turn = 3 - turn;
+			sequence.setText(gameSequence.toString());
+			output.setText("Sum of p1: " + sum_player1 + "\tSum of p2: " + sum_player2);
+		}
+		String tmp = "Sum of p1: " + sum_player1 + "\tSum of p2: " + sum_player2;
+		if (sum_player1 > sum_player2)
+			output.setText(tmp + "\tPlayer 1 Won!");
+		else if (sum_player2 > sum_player1)
+			output.setText(tmp + "\tPlayer 2 Won!");
+		else
+			output.setText(tmp + "\tDraw!");
+		isReset = false;
+
+	}
+	
+	public void startGUI(JTextField sequence, JTextField output) {
+		if (!isReset)
+			this.reset();
+		int turn = 1;
+		char input = PipedInputThread.NO_INPUT;
+		while (!gameSequence.isEmpty()) {
+			if (turn == 1) {
+				input = agent.play(gameSequence);
+				if (input == 'L')
+					sum_player1 += this.gameSequence.remove(0);
+				else
+					sum_player1 += gameSequence.remove(gameSequence.size() - 1);
+			} else {
+				GUIAlpha.input = PipedInputThread.NO_INPUT;
+				input = PipedInputThread.NO_INPUT;
+				while ((input = GUIAlpha.input) == PipedInputThread.NO_INPUT) {
+					try {
+						Thread.sleep(300);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				while (input != 'L' && input != 'R') {
+					while ((input = GUIAlpha.input) != PipedInputThread.NO_INPUT)
+						;
+				}
+				if (input == 'L') {
+					sum_player2 += this.gameSequence.remove(0);
+				}
+				else {
 					sum_player2 += gameSequence.remove(gameSequence.size() - 1);
 				}
 			}
