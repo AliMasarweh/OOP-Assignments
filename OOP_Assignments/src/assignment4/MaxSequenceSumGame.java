@@ -155,10 +155,10 @@ public class MaxSequenceSumGame {
 					while ((input = GUIAlpha.input) != PipedInputThread.NO_INPUT)
 						;
 				}
-				if (input == 'L') {
+				if (!gameSequence.isEmpty() && input == 'L') {
 					sum_player2 += this.gameSequence.remove(0);
 				}
-				else {
+				else if (!gameSequence.isEmpty() && input == 'R'){
 					sum_player2 += gameSequence.remove(gameSequence.size() - 1);
 				}
 			}
@@ -174,7 +174,7 @@ public class MaxSequenceSumGame {
 		else
 			output.setText(tmp + "\tDraw!");
 		isReset = false;
-
+		sequence.setText("Press start to restart the game!");
 	}
 
 	public void reset() {

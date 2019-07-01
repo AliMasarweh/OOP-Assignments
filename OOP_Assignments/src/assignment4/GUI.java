@@ -80,7 +80,7 @@ public class GUI {
 		sequenceField.setBounds(12, 13, 408, 33);
 		frame.getContentPane().add(sequenceField);
 		sequenceField.setColumns(10);
-		sequenceField.setText(game.sequence());
+		sequenceField.setText("Press Start!");
 
 		JButton btnStart = new JButton("Start");
 		btnStart.addMouseListener(new MouseAdapter() {

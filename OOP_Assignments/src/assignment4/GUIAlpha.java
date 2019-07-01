@@ -47,7 +47,7 @@ public class GUIAlpha {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		game = new MaxSequenceSumGame(20);
+		game = new MaxSequenceSumGame(6);
 
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
@@ -58,7 +58,7 @@ public class GUIAlpha {
 		sequenceField.setBounds(12, 13, 408, 33);
 		frame.getContentPane().add(sequenceField);
 		sequenceField.setColumns(10);
-		sequenceField.setText(game.sequence());
+		sequenceField.setText("Press Start!");
 
 		JButton btnStart = new JButton("Start");
 		btnStart.addMouseListener(new MouseAdapter() {
@@ -114,7 +114,7 @@ public class GUIAlpha {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				game.setAgentToSopisticated();
-				output.setText("The difficulty is now easy");
+				output.setText("The difficulty is now hard");
 			}
 		});
 		btnHard.setBounds(263, 159, 99, 33);
