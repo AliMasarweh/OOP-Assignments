@@ -281,11 +281,11 @@ public class BigThanMedian implements Runnable {
 		a = lst.remove(0);
 		b = lst.remove(0);
 		Arrays.toString(bigThanMedianAlgo(a, b));
-		System.out.println(time);
+		System.out.println("bigThanMedianAlgo: "+time+" in mili-seconds - Normal Threads");
 		Arrays.toString(bigThanMedianMerge(a, b));
-		System.out.println(time);
+		System.out.println("bigThanMedianMerge: "+time+" in mili-seconds- Merge");
 		bigThanMedianAlgo2(a, b);
-		System.out.println(time);
+		System.out.println("bigThanMedianAlgo2: "+time+" in mili-seconds - ExecutorService");
 	}
 
 	@Override
