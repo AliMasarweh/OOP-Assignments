@@ -3,7 +3,11 @@ package assignment4;
 import java.util.List;
 import java.util.Random;
 
-
+/**
+ * Builds an instances of different types of agents
+ * @author Ali Masarweh
+ *
+ */
 public class AgentFactory{
 	public static Agent buildSophisticatedAgent() {
 		return new SophisticatedAgent();
@@ -14,8 +18,13 @@ public class AgentFactory{
 	}
 }
 
+/**
+ * Sophisticated agent is very calculated and wins always, given that he starts first,
+ * if not possible at least he ties 
+ * @author Ali Masarweh
+ *
+ */
 class SophisticatedAgent implements Agent{
-	
 	public char play(List<Integer> gameSequence) {
 		int odd = 0, even = 0, turn = 1;
 		for (int i = 0; i < gameSequence.size(); i++) {
@@ -34,6 +43,11 @@ class SophisticatedAgent implements Agent{
 
 }
 
+/**
+ * Just randomly plays
+ * @author Ali Masarweh
+ *
+ */
 class RandomAgent implements Agent{
 	
 	Random rnd;

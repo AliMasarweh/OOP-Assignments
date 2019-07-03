@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,6 +13,11 @@ import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Ali Masarweh
+ * NOTE: this GUI currently is not working, please use GUIAlpha
+ */
 public class GUI {
 
 	private JFrame frame;

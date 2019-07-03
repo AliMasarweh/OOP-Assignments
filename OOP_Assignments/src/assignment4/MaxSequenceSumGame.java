@@ -10,6 +10,19 @@ import java.util.Scanner;
 
 import javax.swing.JTextField;
 
+
+/**
+ * This a the algorithm implementation as a back-end for the game.
+ * The goal of the game is to achieve higher sum of numbers than the other player,
+ * each turn, the player whose turn is the current one has to pick either the number
+ * at the right side number or the left side number from the sequence.
+ * 
+ * A simple strategy to guarantee the victory (or at least a draw) the pick the odd (even)
+ * indexed numbers given that the odd (even) indexes has the higher sum value.
+ * 
+ * The best strategy is to use the above method each turn as an adaptive strategy
+ * @author Ali Masarweh
+ */
 public class MaxSequenceSumGame {
 
 	private List<Integer> gameSequence;
@@ -17,6 +30,11 @@ public class MaxSequenceSumGame {
 	private boolean isReset;
 	private Agent agent;
 
+	/**
+	 * initializes the game with the given length of sequence,
+	 * default agent is the sophisticated one. 
+	 * @param game_len - length of the sequence
+	 */
 	public MaxSequenceSumGame(int game_len) {
 		len = ((1 + game_len) / 2) * 2;
 		generateRandomSequence(len);
@@ -26,14 +44,24 @@ public class MaxSequenceSumGame {
 		agent = AgentFactory.buildSophisticatedAgent();
 	}
 
+	/**
+	 * sets the adversarial agent to sophisticated
+	 */
 	public void setAgentToSopisticated() {
 		agent = AgentFactory.buildSophisticatedAgent();
 	}
 
+	/**
+	 * sets the adversarial agent to random simple agent
+	 */
 	public void setAgentToRandom() {
 		agent = AgentFactory.buildRandomAgent();
 	}
 
+	/**
+	 * generates the random sequence in the range of 0-99
+	 * @param game_len - length of the sequence
+	 */
 	private void generateRandomSequence(int game_len) {
 		Random rnd = new Random();
 		gameSequence = new ArrayList<>(game_len);
@@ -42,6 +70,10 @@ public class MaxSequenceSumGame {
 		}
 	}
 
+	/**
+	 * The back-end implementation for validation & testing
+	 * @param reader - reads the user input
+	 */
 	public void start(Reader reader) {
 		if (!isReset)
 			this.reset();
@@ -80,6 +112,14 @@ public class MaxSequenceSumGame {
 
 	}
 
+	
+	/**
+	 * This Is An Implementation For The Older Approach That Didn't Work,
+	 * Skip To See The Newer One
+	 * @param pipeReader
+	 * @param sequence
+	 * @param output
+	 */
 	public void startGUI(PipedInputThread pipeReader,JTextField sequence, JTextField output) {
 		if (!isReset)
 			this.reset();
@@ -127,12 +167,17 @@ public class MaxSequenceSumGame {
 		isReset = false;
 
 	}
-	
+	/**
+	 * Starts/Restarts the game as soon as the Start button is clicked,
+	 * uses the text fields as input & output to interact with the users.
+	 * @param sequence displays the sequence of numbers
+	 * @param output displays the game's output
+	 */
 	public void startGUI(JTextField sequence, JTextField output) {
 		if (!isReset)
 			this.reset();
 		int turn = 1;
-		char input = PipedInputThread.NO_INPUT;
+		char input = GUIAlpha.NO_INPUT;
 		while (!gameSequence.isEmpty()) {
 			if (turn == 1) {
 				input = agent.play(gameSequence);
@@ -141,9 +186,9 @@ public class MaxSequenceSumGame {
 				else
 					sum_player1 += gameSequence.remove(gameSequence.size() - 1);
 			} else {
-				GUIAlpha.input = PipedInputThread.NO_INPUT;
-				input = PipedInputThread.NO_INPUT;
-				while ((input = GUIAlpha.input) == PipedInputThread.NO_INPUT) {
+				GUIAlpha.input = GUIAlpha.NO_INPUT;
+				input = GUIAlpha.NO_INPUT;
+				while ((input = GUIAlpha.input) == GUIAlpha.NO_INPUT) {
 					try {
 						Thread.sleep(300);
 					} catch (InterruptedException e) {
@@ -152,7 +197,7 @@ public class MaxSequenceSumGame {
 					}
 				}
 				while (input != 'L' && input != 'R') {
-					while ((input = GUIAlpha.input) != PipedInputThread.NO_INPUT)
+					while ((input = GUIAlpha.input) != GUIAlpha.NO_INPUT)
 						;
 				}
 				if (!gameSequence.isEmpty() && input == 'L') {
@@ -177,6 +222,9 @@ public class MaxSequenceSumGame {
 		sequence.setText("Press start to restart the game!");
 	}
 
+	/**
+	 * resets the game
+	 */
 	public void reset() {
 		generateRandomSequence(len);
 		sum_player1 = 0;
@@ -184,6 +232,9 @@ public class MaxSequenceSumGame {
 		isReset = true;
 	}
 
+	/**
+	 * prints the sequence
+	 */
 	public void printSequence() {
 		System.out.println(gameSequence);
 	}
@@ -194,6 +245,10 @@ public class MaxSequenceSumGame {
 		game.start(new BufferedReader(new InputStreamReader(System.in)));
 	}
 
+	/**
+	 * to display the sequence
+	 * @return the sequence -> string
+	 */
 	public String sequence() {
 		return gameSequence.toString();
 	}

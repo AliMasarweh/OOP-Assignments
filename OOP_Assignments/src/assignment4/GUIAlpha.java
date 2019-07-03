@@ -9,6 +9,13 @@ import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * The Graphical interface for much more user-friendly utilization
+ * This class handles the front-end of the game, 
+ * input from user to output of the current game state.
+ * @author Ali Masarweh
+ * 
+ */
 public class GUIAlpha {
 
 	private JFrame frame;
@@ -17,7 +24,8 @@ public class GUIAlpha {
 	private JTextField output;
 	private MaxSequenceSumGame game;
 	protected Thread gameThread;
-	public static volatile Character input = 'V';
+	public static volatile Character input = 'V'; 
+	final static char NO_INPUT = 'V';
 
 	/**
 	 * Launch the application.
