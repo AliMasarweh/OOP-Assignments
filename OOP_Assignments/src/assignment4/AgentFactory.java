@@ -27,6 +27,8 @@ public class AgentFactory{
 class SophisticatedAgent implements Agent{
 	public char play(List<Integer> gameSequence) {
 		int odd = 0, even = 0, turn = 1;
+		/* To check if the numbers in odd indexies (i.e. i={2*N})
+		 are bigger than in even indexies or otheriwse */
 		for (int i = 0; i < gameSequence.size(); i++) {
 			if(turn == 1)
 				even += gameSequence.get(i);
