@@ -67,7 +67,8 @@ public class GUIAlpha {
 		frame.getContentPane().add(sequenceField);
 		sequenceField.setColumns(10);
 		sequenceField.setText("Press Start!");
-
+		
+		//Handling Events of Start Button
 		JButton btnStart = new JButton("Start");
 		btnStart.addMouseListener(new MouseAdapter() {
 			@Override
@@ -85,7 +86,8 @@ public class GUIAlpha {
 		});
 		btnStart.setBounds(168, 56, 99, 33);
 		frame.getContentPane().add(btnStart);
-
+		
+		//Handling Events of Left Button
 		JButton btnLeft = new JButton("Left");
 		btnLeft.addMouseListener(new MouseAdapter() {
 			@Override
@@ -95,7 +97,8 @@ public class GUIAlpha {
 		});
 		btnLeft.setBounds(86, 102, 99, 33);
 		frame.getContentPane().add(btnLeft);
-
+		
+		//Handling Events of Right Button
 		JButton btnRight = new JButton("Right");
 		btnRight.addMouseListener(new MouseAdapter() {
 			@Override
@@ -105,7 +108,8 @@ public class GUIAlpha {
 		});
 		btnRight.setBounds(253, 102, 99, 33);
 		frame.getContentPane().add(btnRight);
-
+		
+		//Handling Events of Easy Button
 		JButton btnEasy = new JButton("Easy");
 		btnEasy.addMouseListener(new MouseAdapter() {
 			@Override
@@ -116,7 +120,8 @@ public class GUIAlpha {
 		});
 		btnEasy.setBounds(131, 159, 99, 33);
 		frame.getContentPane().add(btnEasy);
-
+		
+		//Handling Events of Hard Button
 		JButton btnHard = new JButton("Hard");
 		btnHard.addMouseListener(new MouseAdapter() {
 			@Override
