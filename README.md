@@ -1,7 +1,6 @@
 # OOP-Assignments
-Introduction to Object Oriented Programming Course Assignments
+Obligatory course for Sophomore computer science students to study about current methods in object oriented design and programming. Such topics as Inclusion, Inheritance, Interfaces, Use of Output Input, Exception Handling, Development Based Tests, configuration control, use of data structures, integration of existing code, multi-process based development, use Databases and graphical and application interface development and Desing Patterns.
 
-Obligatory course for Sophomore computer science students to study about current methods in object oriented design and programming. Such topics as encapsulation, information hiding, inheritance, polymorphism and desing patterns are studied in class assignments and programming exercises.
 
 The Java programming language is the utility to attain hands-on experience, The objective of each assignment is:
 
